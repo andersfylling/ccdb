@@ -1,4 +1,4 @@
-# ccdb
+# BTC Bitfinex [CCDB]
 Crypto-Currency-Discord-Bot written in Go, using the Unison library to display a crypto currency.
 This upates every 0.5sec or slower depending on the realtime updates.
 
