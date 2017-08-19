@@ -3,8 +3,9 @@ Crypto-Currency-Discord-Bot written in Go, using the Unison library to display a
 
 
 ## How it looks
-With a seperate role given to the bot:
 [![ae43420d27c87146dbf64423f6b6ef87.png](http://pichoster.net/images/2017/08/19/ae43420d27c87146dbf64423f6b6ef87.png)](http://pichoster.net/image/aWow8)
+
+With a seperate role given to the bot
 
 
 ## Add to your server
