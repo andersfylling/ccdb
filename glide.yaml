@@ -1,0 +1,5 @@
+package: github.com/sciencefyll/ccdb
+import:
+- package: github.com/s1kx/unison
+  version: development
+
