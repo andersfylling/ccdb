@@ -1,9 +1,8 @@
 package service
 
 import (
-	"fmt"
-
 	"strconv"
+	"time"
 	//"github.com/bwmarrin/discordgo"
 	"github.com/Sirupsen/logrus"
 	"github.com/bitfinexcom/bitfinex-api-go/v1"
@@ -44,11 +43,16 @@ func BTC_bitfinexAction(ctx *unison.Context) error {
 	return err
 }
 
+// keep track of time since last sent update
+var lastSent = time.Now().UTC()
+
 func updateStatus(in chan []float64, ctx *unison.Context) {
 	for {
 		data := <-in
-		status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
-		ctx.Bot.Discord.UpdateStatus(0, status)
-		fmt.Println(status)
+		if time.Since(lastSent) > 501 { // ms. Max 2 per second
+			status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
+			ctx.Bot.Discord.UpdateStatus(0, status)
+			lastSent = time.Now().UTC()
+		}
 	}
 }
