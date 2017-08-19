@@ -1,5 +1,8 @@
 # ccdb
 Crypto-Currency-Discord-Bot written in Go, using the Unison library to display a crypto currency.
+This upates every 0.5sec or slower depending on the realtime updates.
+
+Discord limits updates to 2 times per second, so obviusly this can't be realtime. I have currently just added a check that blocks any updates that takes place before 0.5s has passed, so it might feel slow at times.
 
 
 ## How it looks
