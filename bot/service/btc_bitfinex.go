@@ -15,6 +15,9 @@ var BTC_bitfinexService = &unison.Service{
 	Description: "real time monitor of Bitfinex btc:usd rate.",
 	Action:      BTC_bitfinexAction,
 	Deactivated: false,
+	Data: map[string]string{
+		"btc_bitfinex_usd": "? USD",
+	},
 }
 
 func BTC_bitfinexAction(ctx *unison.Context) error {
@@ -49,8 +52,14 @@ var lastSent = time.Now().UTC()
 func updateStatus(in chan []float64, ctx *unison.Context) {
 	for {
 		data := <-in
-		if time.Since(lastSent) > 501 { // ms. Max 2 per second
-			status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
+		status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
+
+		// store to service data
+		ctx.Bot.SetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd", status)
+		//BTC_bitfinexService.Data["btc_bitfinex_usd"] = status
+
+		// TODO: move status change into another service
+		if time.Since(lastSent) > 500 { // ms. Max 2 per second
 			ctx.Bot.Discord.UpdateStatus(0, status)
 			lastSent = time.Now().UTC()
 		}
