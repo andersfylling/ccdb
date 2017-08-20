@@ -17,6 +17,7 @@ func RunBot(conf *config.Config) {
 
 		Commands: []*unison.Command{
 			cmd.BtcCommand,
+			cmd.ServersCommand,
 		},
 		EventHooks: []*unison.EventHook{},
 		Services: []*unison.Service{
