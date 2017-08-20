@@ -5,6 +5,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/s1kx/unison"
+	"github.com/sciencefyll/ccdb/bot/cmd"
 	"github.com/sciencefyll/ccdb/bot/service"
 	"github.com/sciencefyll/ccdb/config"
 )
@@ -14,11 +15,15 @@ func RunBot(conf *config.Config) {
 	settings := &unison.BotSettings{
 		Token: conf.Discord.Token,
 
-		Commands:   []*unison.Command{},
+		Commands: []*unison.Command{
+			cmd.BtcCommand,
+		},
 		EventHooks: []*unison.EventHook{},
 		Services: []*unison.Service{
 			service.BTC_bitfinexService,
 		},
+
+		CommandPrefix: conf.Bot.CommandPrefix,
 	}
 
 	// Start the bot
