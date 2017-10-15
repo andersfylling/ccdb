@@ -5,7 +5,6 @@ import (
 	"time"
 	//"github.com/bwmarrin/discordgo"
 	"github.com/Sirupsen/logrus"
-	"github.com/bitfinexcom/bitfinex-api-go/v1"
 	"github.com/s1kx/unison"
 )
 
@@ -58,8 +57,8 @@ func updateStatus(in chan []float64, ctx *unison.Context) {
 		ctx.Bot.SetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd", status)
 		//BTC_bitfinexService.Data["btc_bitfinex_usd"] = status
 
-		// TODO: move status change into another service
-		if time.Since(lastSent) > 500 { // ms. Max 2 per second
+		// `Clients may only update their game status 5 times per minute.`
+		if time.Since(lastSent) > 12100 { // ms
 			ctx.Bot.Discord.UpdateStatus(0, status)
 			lastSent = time.Now().UTC()
 		}
