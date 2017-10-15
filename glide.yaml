@@ -6,4 +6,4 @@ import:
 - package: github.com/urfave/cli
   version: ^v2
 - package: github.com/Sirupsen/logrus
-  version: ^1.0.3
+version: ^1.0.3

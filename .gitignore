@@ -16,3 +16,5 @@ glide.lock
 
 # dependencies
 vendor/
+
+!/vendor/vendor.json
