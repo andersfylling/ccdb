@@ -12,6 +12,7 @@ With a seperate role given to the bot
 
 
 ## Add to your server
+This uses docker to run, so make sure you set the environment variables `CCDB_TOKEN` and optinally `CCDB_COMMANDPREFIX`. The command prefix is `$` by default.
 This bot doesn't need any permissions, so no need to waste time on that.
 To add it to your server, click here: https://discordapp.com/oauth2/authorize?&client_id=348565617005297687&scope=bot&permissions=0
 
