@@ -1,4 +1,4 @@
-package: github.com/sciencefyll/ccdb
+package: github.com/andersfylling/ccdb
 import:
 - package: github.com/s1kx/unison
   version: development

@@ -8,14 +8,12 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
 
-	"github.com/sciencefyll/ccdb/bot"
-	"github.com/sciencefyll/ccdb/config"
-	"github.com/sciencefyll/ccdb/version"
+	"github.com/andersfylling/ccdb/bot"
+	"github.com/andersfylling/ccdb/config"
+	"github.com/andersfylling/ccdb/version"
 )
 
 const (
-	defaultConfigPath = "~/.config/ccdb.toml"
-
 	// EnvVarPrefix is the prefix for environment variables
 	EnvVarPrefix = "CCDB"
 )
@@ -38,13 +36,6 @@ func main() {
 		Usage:   "Discord bot that displays a crypto currency",
 		Version: version.PackageVersion,
 		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "config",
-				Aliases: []string{"c"},
-				EnvVars: envVarNames("CONFIG"),
-				Value:   defaultConfigPath,
-				Usage:   "path to configuration (toml format)",
-			},
 			&cli.BoolFlag{
 				Name:    "debug",
 				Aliases: []string{"d"},
@@ -76,7 +67,6 @@ var logFormatter = logrus.TextFormatter{
 }
 
 func initApplication(c *cli.Context) error {
-	configPath := c.String("config")
 	debug := c.Bool("debug")
 
 	// Configure logger.
@@ -87,11 +77,27 @@ func initApplication(c *cli.Context) error {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 
-	// Load configuration in to package variable conf.
-	err := config.Load(configPath, &conf)
-	if err != nil {
-		logrus.Fatalf("Error loading configuration: %s", err)
-		return err
+	// Use environment variables as main config
+	token := os.Getenv("CCDB_TOKEN")
+	if token != "" {
+		commandPrefix := os.Getenv("CCDB_COMMANDPREFIX")
+		if commandPrefix == "" {
+			commandPrefix = "$"
+		}
+
+		conf = config.Config{
+			Application: config.ApplicationConfig{},
+			Discord: config.DiscordConfig{
+				Token: token,
+			},
+			Bot: config.BotConfig{
+				CommandPrefix: commandPrefix,
+				Status:        "",
+			},
+		}
+	} else {
+		logrus.Fatalf("Error could not find environment variable for discord token CCDB_TOKEN")
+		return nil
 	}
 
 	return nil

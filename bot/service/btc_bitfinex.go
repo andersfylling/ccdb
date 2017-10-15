@@ -5,21 +5,23 @@ import (
 	"time"
 	//"github.com/bwmarrin/discordgo"
 	"github.com/Sirupsen/logrus"
+	"github.com/bitfinexcom/bitfinex-api-go/v1"
 	"github.com/s1kx/unison"
 )
 
-// btc_bitfinexService updates the bot status to the latest btc price in usd
-var BTC_bitfinexService = &unison.Service{
+// BTCBitfinexService updates the bot status to the latest btc price in usd
+var BTCBitfinexService = &unison.Service{
 	Name:        "btc Bitfinex watcher",
 	Description: "real time monitor of Bitfinex btc:usd rate.",
-	Action:      BTC_bitfinexAction,
+	Action:      BTCBitfinexAction,
 	Deactivated: false,
 	Data: map[string]string{
 		"btc_bitfinex_usd": "? USD",
 	},
 }
 
-func BTC_bitfinexAction(ctx *unison.Context) error {
+// BTCBitfinexAction service action
+func BTCBitfinexAction(ctx *unison.Context) error {
 	//pull data in real time
 	c := bitfinex.NewClient()
 
@@ -32,10 +34,10 @@ func BTC_bitfinexAction(ctx *unison.Context) error {
 	}
 	defer c.WebSocket.Close()
 
-	ticker_chan := make(chan []float64)
+	tickerChan := make(chan []float64)
 
-	c.WebSocket.AddSubscribe(bitfinex.ChanTicker, bitfinex.BTCUSD, ticker_chan)
-	go updateStatus(ticker_chan, ctx)
+	c.WebSocket.AddSubscribe(bitfinex.ChanTicker, bitfinex.BTCUSD, tickerChan)
+	go updateStatus(tickerChan, ctx)
 
 	err = c.WebSocket.Subscribe()
 	if err != nil {

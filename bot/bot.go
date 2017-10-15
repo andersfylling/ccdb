@@ -4,12 +4,13 @@ import (
 	//"fmt"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/andersfylling/ccdb/bot/cmd"
+	"github.com/andersfylling/ccdb/bot/service"
+	"github.com/andersfylling/ccdb/config"
 	"github.com/s1kx/unison"
-	"github.com/sciencefyll/ccdb/bot/cmd"
-	"github.com/sciencefyll/ccdb/bot/service"
-	"github.com/sciencefyll/ccdb/config"
 )
 
+// RunBot setup bot interface
 func RunBot(conf *config.Config) {
 	// Create bot structure
 	settings := &unison.BotSettings{
@@ -21,7 +22,7 @@ func RunBot(conf *config.Config) {
 		},
 		EventHooks: []*unison.EventHook{},
 		Services: []*unison.Service{
-			service.BTC_bitfinexService,
+			service.BTCBitfinexService,
 		},
 
 		CommandPrefix: conf.Bot.CommandPrefix,
