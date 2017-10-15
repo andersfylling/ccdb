@@ -15,6 +15,6 @@
 glide.lock
 
 # dependencies
-vendor/
+vendor/*
 
 !/vendor/vendor.json

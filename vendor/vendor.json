@@ -1,0 +1,73 @@
+{
+	"comment": "For docker / Heroku",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "9cl7+wv0GvxpQV+HOtV93F9pbmE=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "89742aefa4b206dcf400792f3bd35b542998eb3b",
+			"revisionTime": "2017-08-22T13:27:46Z"
+		},
+		{
+			"checksumSHA1": "VGLBKlfWfG7sl5kWK2ZJIFuFfkw=",
+			"path": "github.com/bwmarrin/discordgo",
+			"revision": "9ce745633f5df2849c8f03d7e8cd0b1fb6d35001",
+			"revisionTime": "2017-10-10T16:21:53Z"
+		},
+		{
+			"checksumSHA1": "rNGJereenlgchMueLU9iBCyQDo8=",
+			"path": "github.com/gorilla/websocket",
+			"revision": "71fa72d4842364bc5f74185f4161e0099ea3624a",
+			"revisionTime": "2017-10-11T16:07:11Z"
+		},
+		{
+			"checksumSHA1": "VcXR8HJOqXZEEID+nbkZHC7ZW+k=",
+			"path": "github.com/s1kx/unison",
+			"revision": "64ef590b94d7cf51f26f8d03d5e1dce4ddab63c0",
+			"revisionTime": "2017-10-06T18:47:53Z"
+		},
+		{
+			"checksumSHA1": "RyWd+GdscCRcROZKsxcdupzDSYk=",
+			"path": "github.com/s1kx/unison/events",
+			"revision": "64ef590b94d7cf51f26f8d03d5e1dce4ddab63c0",
+			"revisionTime": "2017-10-06T18:47:53Z"
+		},
+		{
+			"checksumSHA1": "TwxAhBcGuCzWA6H3FvJE1XVZsxo=",
+			"path": "golang.org/x/crypto/nacl/secretbox",
+			"revision": "9419663f5a44be8b34ca85f08abc5fe1be11f8a3",
+			"revisionTime": "2017-09-30T17:45:11Z"
+		},
+		{
+			"checksumSHA1": "kVKE0OX1Xdw5mG7XKT86DLLKE2I=",
+			"path": "golang.org/x/crypto/poly1305",
+			"revision": "9419663f5a44be8b34ca85f08abc5fe1be11f8a3",
+			"revisionTime": "2017-09-30T17:45:11Z"
+		},
+		{
+			"checksumSHA1": "cRCpfAgTnlIDpdcfjivbiv+9YJU=",
+			"path": "golang.org/x/crypto/salsa20/salsa",
+			"revision": "9419663f5a44be8b34ca85f08abc5fe1be11f8a3",
+			"revisionTime": "2017-09-30T17:45:11Z"
+		},
+		{
+			"checksumSHA1": "nqWNlnMmVpt628zzvyo6Yv2CX5Q=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "9419663f5a44be8b34ca85f08abc5fe1be11f8a3",
+			"revisionTime": "2017-09-30T17:45:11Z"
+		},
+		{
+			"checksumSHA1": "FUo16zuO20jOcdCUu0IgiF51koE=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "686000749eaec0b8855b8eef5336cf63899fe51d",
+			"revisionTime": "2017-10-13T11:59:59Z"
+		},
+		{
+			"checksumSHA1": "pBPFzDGt3AVSRffB7ffiUnruFUk=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "686000749eaec0b8855b8eef5336cf63899fe51d",
+			"revisionTime": "2017-10-13T11:59:59Z"
+		}
+	],
+	"rootPath": "github.com/andersfylling/ccdb"
+}
