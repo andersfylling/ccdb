@@ -37,7 +37,9 @@ func BTCBitfinexAction(ctx *unison.Context) error {
 	tickerChan := make(chan []float64)
 
 	c.WebSocket.AddSubscribe(bitfinex.ChanTicker, bitfinex.BTCUSD, tickerChan)
-	go updateStatus(tickerChan, ctx)
+	go updateData(tickerChan, ctx)
+
+	go updateBotPresence(ctx)
 
 	err = c.WebSocket.Subscribe()
 	if err != nil {
@@ -47,22 +49,20 @@ func BTCBitfinexAction(ctx *unison.Context) error {
 	return err
 }
 
-// keep track of time since last sent update
-var lastSent = time.Now().UTC()
+// update the bot status every 12s
+func updateBotPresence(ctx *unison.Context) {
+	for {
+		time.Sleep(12 * time.Second)
+		ctx.Bot.Discord.UpdateStatus(0, ctx.Bot.GetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd"))
+	}
+}
 
-func updateStatus(in chan []float64, ctx *unison.Context) {
+func updateData(in chan []float64, ctx *unison.Context) {
 	for {
 		data := <-in
 		status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
 
 		// store to service data
 		ctx.Bot.SetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd", status)
-		//BTC_bitfinexService.Data["btc_bitfinex_usd"] = status
-
-		// `Clients may only update their game status 5 times per minute.`
-		if time.Since(lastSent) > 12100 { // ms
-			ctx.Bot.Discord.UpdateStatus(0, status)
-			lastSent = time.Now().UTC()
-		}
 	}
 }
