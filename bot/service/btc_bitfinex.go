@@ -61,8 +61,8 @@ func updateStatus(in chan []float64, ctx *unison.Context) {
 
 		// `Clients may only update their game status 5 times per minute.`
 		if time.Since(lastSent) > 12100 { // ms
-			ctx.Bot.Discord.UpdateStatus(0, status)
 			lastSent = time.Now().UTC()
+			ctx.Bot.Discord.UpdateStatus(0, status)
 		}
 	}
 }
