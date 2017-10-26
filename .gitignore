@@ -18,3 +18,6 @@ glide.lock
 vendor/*
 
 !/vendor/vendor.json
+
+# ignore the local dev file
+run-dev.sh

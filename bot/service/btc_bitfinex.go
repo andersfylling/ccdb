@@ -1,11 +1,11 @@
 package service
 
 import (
-	"strconv"
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"time"
-	//"github.com/bwmarrin/discordgo"
-	"github.com/Sirupsen/logrus"
-	"github.com/bitfinexcom/bitfinex-api-go/v1"
+
 	"github.com/s1kx/unison"
 )
 
@@ -20,49 +20,52 @@ var BTCBitfinexService = &unison.Service{
 	},
 }
 
+type BitfinexJSON struct {
+	// https://api.bitfinex.com/v1/pubticker/btcusd
+	LastPrice string `json:"last_price"`
+}
+
+var myClient = &http.Client{Timeout: 5 * time.Second}
+
+func getJSON(url string, target interface{}) error {
+	r, err := myClient.Get(url)
+	if err != nil {
+		return err
+	}
+	defer r.Body.Close()
+
+	return json.NewDecoder(r.Body).Decode(target)
+}
+
+func getLatestPrice() string {
+	price := BitfinexJSON{}
+	err := getJSON("https://api.bitfinex.com/v1/pubticker/btcusd", &price)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return "? USD"
+	}
+
+	return price.LastPrice
+}
+
 // BTCBitfinexAction service action
 func BTCBitfinexAction(ctx *unison.Context) error {
-	//pull data in real time
-	c := bitfinex.NewClient()
+	go func() {
+		// update the status
+		ctx.Bot.Discord.UpdateStatus(0, getLatestPrice()+" USD")
+		for {
+			select {
+			case <-ctx.SystemInteruptChan:
+				fmt.Println("\tStopped Service: BTCBitfinex")
+				return
+			default:
+				time.Sleep(12 * time.Second)
+				// update the status again
+				ctx.Bot.Discord.UpdateStatus(0, getLatestPrice()+" USD")
+			}
+		}
+	}()
 
-	// in case your proxy is using a non valid certificate set to TRUE
-	c.WebSocketTLSSkipVerify = false
-
-	err := c.WebSocket.Connect()
-	if err != nil {
-		logrus.Error("Error connecting to web socket : ", err)
-	}
-	defer c.WebSocket.Close()
-
-	tickerChan := make(chan []float64)
-
-	c.WebSocket.AddSubscribe(bitfinex.ChanTicker, bitfinex.BTCUSD, tickerChan)
-	go updateData(tickerChan, ctx)
-
-	go updateBotPresence(ctx)
-
-	err = c.WebSocket.Subscribe()
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	return err
-}
-
-// update the bot status every 12s
-func updateBotPresence(ctx *unison.Context) {
-	for {
-		time.Sleep(12 * time.Second)
-		ctx.Bot.Discord.UpdateStatus(0, ctx.Bot.GetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd"))
-	}
-}
-
-func updateData(in chan []float64, ctx *unison.Context) {
-	for {
-		data := <-in
-		status := strconv.FormatFloat(data[0], 'f', 2, 64) + " USD"
-
-		// store to service data
-		ctx.Bot.SetServiceData("btc Bitfinex watcher", "btc_bitfinex_usd", status)
-	}
+	return nil
 }
