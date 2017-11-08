@@ -1,8 +1,8 @@
 # BTC Bitfinex [CCDB]
 Crypto-Currency-Discord-Bot written in Go, using the Unison library to display a crypto currency.
-This upates every 0.5sec or slower depending on the realtime updates.
+This upates every 12sec or slower depending on the realtime updates.
 
-Discord limits updates to 2 times per second, so obviusly this can't be realtime. I have currently just added a check that blocks any updates that takes place before 0.5s has passed, so it might feel slow at times.
+Discord limits status updates to 12second intervals, so obviusly this can't be realtime. But should held keeping servers a little up to date for those interested.
 
 
 ## How it looks
