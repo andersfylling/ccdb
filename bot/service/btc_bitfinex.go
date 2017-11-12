@@ -24,8 +24,8 @@ type BitfinexJSON struct {
 	// https://api.bitfinex.com/v1/pubticker/btcusd
 	LastPrice string `json:"last_price"`
 }
-
-var myClient = &http.Client{Timeout: 5 * time.Second}
+var rate string = ""
+var myClient = &http.Client{Timeout: 7 * time.Second}
 
 func getJSON(url string, target interface{}) error {
 	r, err := myClient.Get(url)
@@ -43,17 +43,23 @@ func getLatestPrice() string {
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return "? USD"
+		if rate == "" {
+			return "?"
+		} else {
+			return "("+rate+") USD"
+		}
 	}
+	
+	rate = price.LastPrice
 
-	return price.LastPrice
+	return price.LastPrice + " USD"
 }
 
 // BTCBitfinexAction service action
 func BTCBitfinexAction(ctx *unison.Context) error {
 	go func() {
 		// update the status
-		ctx.Bot.Discord.UpdateStatus(0, getLatestPrice()+" USD")
+		ctx.Bot.Discord.UpdateStatus(0, getLatestPrice())
 		for {
 			select {
 			case <-ctx.SystemInteruptChan:
@@ -62,7 +68,7 @@ func BTCBitfinexAction(ctx *unison.Context) error {
 			default:
 				time.Sleep(12 * time.Second)
 				// update the status again
-				ctx.Bot.Discord.UpdateStatus(0, getLatestPrice()+" USD")
+				ctx.Bot.Discord.UpdateStatus(0, getLatestPrice())
 			}
 		}
 	}()
