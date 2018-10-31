@@ -65,7 +65,10 @@ func statusUpdateScheduler(session disgord.Session, fetch bitcoinValueFetcher,st
 			newStatus := getStatusUpdateBody(price)
 			data, _ := json.Marshal(newStatus)
 			fmt.Println(string(data))
-			session.Emit(disgord.CommandUpdateStatus, newStatus)
+			err := session.Emit(disgord.CommandUpdateStatus, newStatus)
+			if err != nil {
+				logrus.Error(err)
+			}
 		}
 
 		select {
