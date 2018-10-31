@@ -1,7 +1,7 @@
 module github.com/andersfylling/ccdb
 
 require (
-	github.com/andersfylling/disgord v0.8.1-0.20181031144330-5b9933d39be4
+	github.com/andersfylling/disgord v0.8.1
 	github.com/mdempsky/gocode v0.0.0-20181030163406-be88cde360c2 // indirect
 	github.com/sirupsen/logrus v1.1.1
 	github.com/sqs/goreturns v0.0.0-20181028201513-538ac6014518 // indirect

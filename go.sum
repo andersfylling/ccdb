@@ -13,6 +13,8 @@ github.com/andersfylling/disgord v0.8.1-0.20181031144141-fbd86c4f34e7 h1:RSF7wqZ
 github.com/andersfylling/disgord v0.8.1-0.20181031144141-fbd86c4f34e7/go.mod h1:mAOoDflyxwzruGKWr8cBupA638+gJCRtkFItLh2dghk=
 github.com/andersfylling/disgord v0.8.1-0.20181031144330-5b9933d39be4 h1:CzcYwao5GZiWQ2t5TSioESjLCBgVMgP8+atutts4RbM=
 github.com/andersfylling/disgord v0.8.1-0.20181031144330-5b9933d39be4/go.mod h1:mAOoDflyxwzruGKWr8cBupA638+gJCRtkFItLh2dghk=
+github.com/andersfylling/disgord v0.8.1 h1:nxXRFMMNgpimzfnuo3R77fJ5u/k6KMr2Fuc83nYbb4Y=
+github.com/andersfylling/disgord v0.8.1/go.mod h1:mAOoDflyxwzruGKWr8cBupA638+gJCRtkFItLh2dghk=
 github.com/andersfylling/snowflake/v2 v2.0.3 h1:WOec/s+f/R/pdMpDpIlqpFJJp/nesjeEDaDBWGju6ho=
 github.com/andersfylling/snowflake/v2 v2.0.3/go.mod h1:wLp/WvxTxBFlRhpyH/JGw+tVLsWsEuV7/AgJB9PirBc=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
