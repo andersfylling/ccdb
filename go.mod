@@ -2,7 +2,7 @@ module github.com/andersfylling/ccdb
 
 require (
 	github.com/alecthomas/gometalinter v3.0.0+incompatible // indirect
-	github.com/andersfylling/disgord v0.9.0-alpha.0.20190209182256-b5ec27d467a7
+	github.com/andersfylling/disgord v0.9.0-beta
 	github.com/andersfylling/snowflake/v2 v2.0.4 // indirect
 	github.com/fatih/gomodifytags v0.0.0-20180914191908-141225bf62b6 // indirect
 	github.com/google/shlex v0.0.0-20181106134648-c34317bd91bf // indirect
