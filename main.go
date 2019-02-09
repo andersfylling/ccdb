@@ -2,103 +2,50 @@ package main
 
 import (
 	"fmt"
+	"github.com/andersfylling/disgord"
+	"github.com/andersfylling/disgord/event"
 	"os"
 	"strings"
-
-	"github.com/Sirupsen/logrus"
-	"github.com/urfave/cli"
-
-	"github.com/sciencefyll/ccdb/bot"
-	"github.com/sciencefyll/ccdb/config"
-	"github.com/sciencefyll/ccdb/version"
 )
 
 const (
-	defaultConfigPath = "~/.config/ccdb.toml"
-
 	// EnvVarPrefix is the prefix for environment variables
-	EnvVarPrefix = "CCDB"
+	EnvVarPrefix = "CCDB_"
+	BotTokenKey  = EnvVarPrefix + "TOKEN"
+
+	CommandPrefix = "ccdb!"
 )
 
-var (
-	// Version is the current package version
-	Version string
-)
-
-// conf is a local package variable for access to the config from all cli commands
-var conf config.Config
+func equalCommand(input, command string) bool {
+	return strings.HasPrefix(input, CommandPrefix+command)
+}
 
 func main() {
-	// Set package version for it to be accessible by subpackages
-	version.PackageVersion = Version
-
-	// Initialize command-line application
-	app := &cli.App{
-		Name:    "ccdb",
-		Usage:   "Discord bot that displays a crypto currency",
-		Version: version.PackageVersion,
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "config",
-				Aliases: []string{"c"},
-				EnvVars: envVarNames("CONFIG"),
-				Value:   defaultConfigPath,
-				Usage:   "path to configuration (toml format)",
-			},
-			&cli.BoolFlag{
-				Name:    "debug",
-				Aliases: []string{"d"},
-				EnvVars: envVarNames("DEBUG"),
-				Usage:   "debug mode",
-			},
-		},
-		Before: initApplication,
-		Action: runApplication,
-	}
-	app.Run(os.Args)
-}
-
-func envVarName(name string) string {
-	return fmt.Sprintf("%s_%s", EnvVarPrefix, strings.ToUpper(name))
-}
-
-func envVarNames(names ...string) []string {
-	res := make([]string, len(names))
-	for i, name := range names {
-		res[i] = envVarName(name)
-	}
-	return res
-}
-
-var logFormatter = logrus.TextFormatter{
-	FullTimestamp:   true,
-	TimestampFormat: "2006-01-02 15:04:05",
-}
-
-func initApplication(c *cli.Context) error {
-	configPath := c.String("config")
-	debug := c.Bool("debug")
-
-	// Configure logger.
-	logrus.SetFormatter(&logFormatter)
-	if debug {
-		logrus.SetLevel(logrus.DebugLevel)
-	} else {
-		logrus.SetLevel(logrus.InfoLevel)
-	}
-
-	// Load configuration in to package variable conf.
-	err := config.Load(configPath, &conf)
+	// create a Disgord client
+	client, err := disgord.NewClient(&disgord.Config{
+		BotToken: os.Getenv(BotTokenKey),
+		Logger:   disgord.DefaultLogger(true),
+		//DisableCache: true, // don't need it
+	})
 	if err != nil {
-		logrus.Fatalf("Error loading configuration: %s", err)
-		return err
+		panic(err)
 	}
 
-	return nil
-}
+	// register commands
+	client.On(event.MessageCreate, about)
+	client.On(event.MessageCreate, servers)
+	client.On(event.GuildCreate, func(session disgord.Session, evt *disgord.GuildCreate) {
+		fmt.Println("joined guild", evt.Guild.Name)
+	})
 
-func runApplication(c *cli.Context) error {
-	bot.RunBot(&conf)
+	// connect to the discord gateway to receive events
+	if err = client.Connect(); err != nil {
+		panic(err)
+	}
 
-	return nil
+	stop := make(chan interface{})
+	go statusUpdateScheduler(client, getBitfinexRate, stop)
+
+	client.DisconnectOnInterrupt()
+	close(stop)
 }

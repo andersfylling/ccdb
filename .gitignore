@@ -15,4 +15,14 @@
 glide.lock
 
 # dependencies
-vendor/
+vendor/*
+
+!/vendor/vendor.json
+
+# ignore the local dev file
+run-dev.sh
+
+debug
+ccdb
+
+.idea/

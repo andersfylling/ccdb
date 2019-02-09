@@ -1,0 +1,21 @@
+# kubernetes deployment file (GKE)
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ccdb
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ccdb
+    spec:
+      containers:
+        - name: ccdb
+          image: andersfylling/ccdb-disgord:v3
+          env:
+            - name: CCDB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: discord-tokens
+                  key: CCDB

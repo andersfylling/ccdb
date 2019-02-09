@@ -1,9 +1,0 @@
-package: github.com/sciencefyll/ccdb
-import:
-- package: github.com/s1kx/unison
-  version: development
-- package: github.com/bitfinexcom/bitfinex-api-go
-- package: github.com/urfave/cli
-  version: ^v2
-- package: github.com/Sirupsen/logrus
-  version: ^1.0.3
