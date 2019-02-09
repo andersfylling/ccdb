@@ -23,9 +23,9 @@ func equalCommand(input, command string) bool {
 func main() {
 	// create a Disgord client
 	client, err := disgord.NewClient(&disgord.Config{
-		BotToken: os.Getenv(BotTokenKey),
-		Logger:   disgord.DefaultLogger(true),
-		//DisableCache: true, // don't need it
+		BotToken:     os.Getenv(BotTokenKey),
+		Logger:       disgord.DefaultLogger(true),
+		DisableCache: true, // don't need it
 	})
 	if err != nil {
 		panic(err)

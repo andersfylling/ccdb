@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: ccdb
-          image: andersfylling/ccdb-disgord:v3.0.5
+          image: andersfylling/ccdb-disgord:v3.0.6
           env:
             - name: CCDB_TOKEN
               valueFrom:
