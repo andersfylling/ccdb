@@ -23,5 +23,6 @@ vendor/*
 run-dev.sh
 
 debug
+ccdb
 
 .idea/

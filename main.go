@@ -1,55 +1,51 @@
 package main
 
 import (
-	//"github.com/sirupsen/logrus"
+	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/andersfylling/disgord/event"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 )
 
 const (
 	// EnvVarPrefix is the prefix for environment variables
 	EnvVarPrefix = "CCDB_"
-	BotTokenKey = EnvVarPrefix + "TOKEN"
+	BotTokenKey  = EnvVarPrefix + "TOKEN"
 
 	CommandPrefix = "ccdb!"
 )
 
 func equalCommand(input, command string) bool {
-	return strings.HasPrefix(input, CommandPrefix + command)
+	return strings.HasPrefix(input, CommandPrefix+command)
 }
 
 func main() {
-	// create a Disgord session
-	session, err := disgord.NewSession(&disgord.Config{
-		Token: os.Getenv(BotTokenKey),
+	// create a Disgord client
+	client, err := disgord.NewClient(&disgord.Config{
+		BotToken: os.Getenv(BotTokenKey),
+		Logger:   disgord.DefaultLogger(true),
+		//DisableCache: true, // don't need it
 	})
 	if err != nil {
 		panic(err)
 	}
 
 	// register commands
-	session.On(event.MessageCreate, about)
-	session.On(event.MessageCreate, servers)
-	//session.On(event.MessageCreate, bitfinex)
+	client.On(event.MessageCreate, about)
+	client.On(event.MessageCreate, servers)
+	client.On(event.GuildCreate, func(session disgord.Session, evt *disgord.GuildCreate) {
+		fmt.Println("joined guild", evt.Guild.Name)
+	})
 
 	// connect to the discord gateway to receive events
-	err = session.Connect()
-	if err != nil {
+	if err = client.Connect(); err != nil {
 		panic(err)
 	}
 
 	stop := make(chan interface{})
-	go statusUpdateScheduler(session, getBitfinexRate, stop)
+	go statusUpdateScheduler(client, getBitfinexRate, stop)
 
-	// Keep the socket connection alive, until you terminate the application
-	termSignal := make(chan os.Signal, 1)
-	signal.Notify(termSignal, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-
-	<-termSignal
+	client.DisconnectOnInterrupt()
 	close(stop)
-	session.Disconnect()
 }

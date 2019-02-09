@@ -19,7 +19,9 @@ This bot is open source and can be found at GitHub:
 This bot was built using Disgord: https://github.com/andersfylling/disgord
 `
 
-	msg.RespondString(session, aboutBot)
+	if _, err := msg.RespondString(session, aboutBot); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func servers(session disgord.Session, evt *disgord.MessageCreate) {
@@ -29,4 +31,5 @@ func servers(session disgord.Session, evt *disgord.MessageCreate) {
 	}
 
 	// TODO: Disgord must implement a way to get all guilds
+
 }

@@ -1,17 +1,12 @@
-FROM golang:1.8
+FROM golang:1.11.5 as builder
 MAINTAINER https://github.com/andersfylling
+WORKDIR /build
+COPY . /build
+RUN export GO111MODULE=on
+RUN go test ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o discordbot .
 
-WORKDIR /go/src/github.com/andersfylling/ccdb
-COPY . .
-
-# Get Glide for package management
-RUN curl https://glide.sh/get | sh
-RUN glide install
-
-ENV CCDB_TOKEN DISCORD_TOKEN_HERE_PLEASE
-ENV CCDB_COMMANDPREFIX $
-
-# RUN go run main.go
-
-# docker build -t discord-bot-bitcoin .
-# docker run -d discord-bot-bitcoin
+FROM gcr.io/distroless/base
+WORKDIR /bot
+COPY --from=builder /build/discordbot .
+CMD ["/bot/discordbot"]
