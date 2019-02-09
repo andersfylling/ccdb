@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -24,7 +25,12 @@ func getJSON(url string, target interface{}) error {
 	}
 	defer r.Body.Close()
 
-	return json.NewDecoder(r.Body).Decode(target)
+	buffer, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(buffer, target)
 }
 
 func getBitfinexRate() (value float64, err error) {
@@ -77,18 +83,21 @@ func statusUpdateScheduler(session disgord.Session, fetch bitcoinValueFetcher, s
 		var price string
 		value, err := fetch()
 		if err != nil && previous[0] != '(' {
+			logrus.Error(err)
 			price = "(" + previous + ")"
 		} else {
 			price = formatValue(value)
 		}
 
-		if price != previous {
+		if price != previous && value != 0 {
 			err = session.UpdateStatusString(price)
 			if err != nil {
 				logrus.Error(err)
 			} else {
 				previous = price
 			}
+		} else if value == 0 {
+			logrus.Error("unable to fetch rate")
 		}
 
 		select {
