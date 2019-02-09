@@ -1,7 +1,7 @@
 # BTC Bitfinex [CCDB]
 Crypto-Currency-Discord-Bot written in Go, using [DisGord](https://github.com/andersfylling/disgord). It updates every 12 second due to Discord rate limits for status updates.
 
-![ccdb bot in action](https://raw.githubusercontent.com/andersfylling/ccdb/master/looks.png)
+![ccdb bot in action](https://raw.githubusercontent.com/andersfylling/ccdb/master/img/looks.png)
 
 ## Add to your server
 [Click here.](https://discordapp.com/oauth2/authorize?&client_id=348565617005297687&scope=bot&permissions=0)
