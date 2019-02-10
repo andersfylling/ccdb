@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/andersfylling/disgord/event"
+	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 )
@@ -22,14 +23,11 @@ func equalCommand(input, command string) bool {
 
 func main() {
 	// create a Disgord client
-	client, err := disgord.NewClient(&disgord.Config{
+	client := disgord.New(&disgord.Config{
 		BotToken:     os.Getenv(BotTokenKey),
 		Logger:       disgord.DefaultLogger(true),
 		DisableCache: true, // don't need it
 	})
-	if err != nil {
-		panic(err)
-	}
 
 	// register commands
 	client.On(event.MessageCreate, about)
@@ -38,14 +36,12 @@ func main() {
 		fmt.Println("joined guild", evt.Guild.Name)
 	})
 
-	// connect to the discord gateway to receive events
-	if err = client.Connect(); err != nil {
-		panic(err)
-	}
-
 	stop := make(chan interface{})
+	defer close(stop)
 	go statusUpdateScheduler(client, getBitfinexRate, stop)
 
-	client.DisconnectOnInterrupt()
-	close(stop)
+	// connect to the discord gateway to receive events
+	if err := client.StayConnectedUntilInterrupted(); err != nil {
+		logrus.Error(err)
+	}
 }
