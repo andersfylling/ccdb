@@ -38,7 +38,9 @@ func main() {
 
 	stop := make(chan interface{})
 	defer close(stop)
-	go statusUpdateScheduler(client, getBitfinexRate, stop)
+	client.Ready(func() {
+		go statusUpdateScheduler(client, getBitfinexRate, stop)
+	})
 
 	// connect to the discord gateway to receive events
 	if err := client.StayConnectedUntilInterrupted(); err != nil {
